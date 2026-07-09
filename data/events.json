@@ -4,7 +4,7 @@
     "nome": "Arraiá Evolution 2026",
     "tipo": "Festa Junina",
     "descricao": "Uma noite de arraiá para celebrar a nossa comunidade. Comidas típicas, música e muita confraternização entre alunos, professores e família Evolution.",
-    "data": "2026-07-22T18:30:00",
+    "start": "2026-07-22T18:30:00",
     "local": "Evolution Fitness  - Três Rios, RJ",
     "imagem": "assets/images/evento-capa.svg",
     "status": "ativo",
