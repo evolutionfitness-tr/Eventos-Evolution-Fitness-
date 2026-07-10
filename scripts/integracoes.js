@@ -12,7 +12,7 @@
 
 const CONFIG = {
   GOOGLE_SHEETS_URL: 'https://script.google.com/macros/s/AKfycBwiy1NMsyumCpQLQajTil84hrji733itN358Chw0NDBEtdiBrzdMRhxCHOrXnVK2Ek/exec',
-  WHATSAPP_NUMERO: '5524981433380'
+  WHATSAPP_NUMERO: '5524981433386'
 };
 
 export const Integracoes = {
