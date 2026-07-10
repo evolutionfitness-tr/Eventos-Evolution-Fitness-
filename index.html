@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Evolution Eventos — Evolution Fitness Studio</title>
+<meta name="description" content="Confirme sua presença e escolha o que levar para os eventos da Evolution Fitness Studio." />
+<meta name="theme-color" content="#0D0D0D" />
+
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" href="assets/icons/icon-192.svg" />
+<link rel="apple-touch-icon" href="assets/icons/icon-192.svg" />
+<link rel="stylesheet" href="style/style.css" />
+</head>
+<body>
+
+<!-- ==================== TELA DE ABERTURA (INTRO) ==================== -->
+<div id="introScreen">
+  <div class="intro__fundo">
+    <img src="assets/images/arraia-personagem.jpg" alt="Arraiá da Evolution Fitness" />
+  </div>
+  <div class="intro__luzes" aria-hidden="true"></div>
+  <div class="intro__particulas" aria-hidden="true"></div>
+
+  <div class="intro__conteudo">
+    <span class="intro__marca">Evolution Fitness Studio &middot; Três Rios, RJ</span>
+    <h1 class="intro__titulo">
+      <span class="linha">Arraiá da</span>
+      <span class="linha">Evolution Fitness</span>
+    </h1>
+    <p class="intro__subtitulo">Treino bom, comida boa e gente que evolui junto. Confirme sua presença e escolha o que levar.</p>
+    <div class="intro__cta">
+      <button type="button" class="btn btn-primary" id="btnEntrarIntro">Entrar no Arraiá</button>
+    </div>
+    <p class="intro__toque">toque para começar</p>
+  </div>
+</div>
+
+<header class="app-header">
+  <div class="container app-header__inner">
+    <div class="app-header__brand">
+      <img src="assets/logo/logo.svg" alt="Evolution Fitness Studio" />
+      <span class="app-header__brand-text">Evolution <span>Eventos</span></span>
+    </div>
+    <a href="admin.html" class="btn btn-ghost btn-sm" style="color: rgba(255,255,255,0.6);">Área administrativa</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero__media">
+    <img id="heroImagem" src="assets/images/evento-capa.svg" alt="" />
+  </div>
+  <div class="container hero__content anim-slide-up">
+    <span class="hero__eyebrow">Evolution Fitness Studio &middot; Três Rios, RJ</span>
+    <h1 class="hero__title" id="heroTitulo">Carregando evento...</h1>
+    <p class="hero__desc" id="heroDescricao"></p>
+    <div class="hero__meta">
+      <span class="hero__meta-item" id="heroData"></span>
+      <span class="hero__meta-item" id="heroLocal"></span>
+    </div>
+  </div>
+</section>
+
+<main class="container">
+
+  <section class="section" id="secaoConfirmacao">
+    <h2 class="section-title">Confirme sua presença</h2>
+    <p class="section-subtitle">Preencha os dados abaixo. Suas informações são salvas automaticamente.</p>
+
+    <form class="card anim-fade-in" id="formConfirmacao" style="max-width: 560px;">
+      <div class="field">
+        <label for="inputNome">Nome completo</label>
+        <input type="text" id="inputNome" required autocomplete="name" />
+        <span class="field-error-msg" id="erroNome">Informe seu nome completo.</span>
+      </div>
+
+      <div class="field">
+        <label for="inputTelefone">Telefone</label>
+        <input type="tel" id="inputTelefone" placeholder="(24) 99999-9999" required autocomplete="tel" />
+        <span class="field-error-msg" id="erroTelefone">Informe um telefone válido com DDD.</span>
+      </div>
+
+      <div class="field">
+        <label>Você vai participar?</label>
+        <div class="radio-group">
+          <label class="radio-pill" id="pillSim">
+            <input type="radio" name="participa" value="sim" />
+            Sim, vou!
+          </label>
+          <label class="radio-pill" id="pillNao">
+            <input type="radio" name="participa" value="nao" />
+            Não vou
+          </label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="inputAcompanhantes">Número de acompanhantes</label>
+        <input type="number" id="inputAcompanhantes" min="0" value="0" />
+      </div>
+
+      <div class="field">
+        <label for="inputObservacoes">Observações (opcional)</label>
+        <textarea id="inputObservacoes" placeholder="Alguma restrição alimentar ou observação?"></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block">Confirmar presença</button>
+    </form>
+  </section>
+
+  <section class="section u-hidden" id="resumoConfirmado">
+    <div class="card anim-scale-in u-text-center" style="max-width: 480px; margin: 0 auto;">
+      <p data-resumo-texto>Sua resposta foi registrada. Obrigado!</p>
+      <button type="button" class="btn btn-outline btn-block u-mt-2" id="btnWhatsAppResumo">Avisar a academia pelo WhatsApp</button>
+    </div>
+  </section>
+
+  <section class="section u-hidden" id="secaoItens">
+    <h2 class="section-title">O que você vai levar, <span id="nomeConfirmado"></span>?</h2>
+    <p class="section-subtitle">Escolha os itens abaixo. Cada item mostra quanto já foi reservado por outros convidados.</p>
+    <div class="items-grid" id="gradeItens"></div>
+    <button type="button" class="btn btn-outline btn-block u-mt-3" id="btnWhatsAppItens" style="max-width: 420px; margin-left:auto; margin-right:auto;">Enviar confirmação pelo WhatsApp</button>
+  </section>
+
+</main>
+
+<footer class="app-footer">
+  <div class="container">
+    <p><strong>Evolution Fitness Studio</strong> &middot; Três Rios, RJ</p>
+  </div>
+</footer>
+
+<script src="scripts/intro.js"></script>
+<script type="module" src="scripts/app.js"></script>
+</body>
+</html>
