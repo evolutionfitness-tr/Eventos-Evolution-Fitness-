@@ -19,36 +19,79 @@ import { Helpers } from '../utils/helpers.js';
 const CHAVE_EVENTOS = 'eventos';
 const CHAVE_ITENS = 'itens';
 const CHAVE_PARTICIPANTES = 'participantes';
-const CHAVE_SEED = 'seedCarregado';
 
-/** Carrega os dados iniciais (seed) apenas na primeira execução. */
-async function garantirSeed() {
-  if (Storage.ler(CHAVE_SEED)) return;
+/**
+ * Sincroniza eventos e itens com os arquivos JSON toda vez que o app abre.
+ *
+ * Diferente de um "seed único", isso SEMPRE busca a versão mais recente de
+ * data/events.json e data/items.json e atualiza nome, descrição, data,
+ * local e quantidades necessárias — assim, uma edição feita nesses arquivos
+ * aparece para qualquer pessoa que abrir o site, mesmo que o aparelho dela
+ * já tivesse dados salvos de antes.
+ *
+ * O que NÃO é sobrescrito (fica só no aparelho de cada pessoa):
+ * - quantas unidades de cada item já foram escolhidas (itens.escolhido)
+ * - a lista de participantes/confirmações
+ * - eventos ou itens criados manualmente pelo painel admin (sem
+ *   correspondência nos arquivos JSON) continuam existindo
+ */
+async function sincronizarComJSON() {
+  let eventosJSON = null;
+  let itensJSON = null;
 
   try {
-    const [eventosRes, itensRes, participantesRes] = await Promise.all([
+    [eventosJSON, itensJSON] = await Promise.all([
       fetch('data/events.json').then((r) => r.json()),
       fetch('data/items.json').then((r) => r.json()),
-      fetch('data/participants.json').then((r) => r.json()),
     ]);
-    Storage.gravar(CHAVE_EVENTOS, eventosRes);
-    Storage.gravar(CHAVE_ITENS, itensRes);
-    Storage.gravar(CHAVE_PARTICIPANTES, participantesRes);
   } catch (erro) {
-    // Se os arquivos JSON não estiverem acessíveis (ex.: abertura via file://),
-    // inicializa vazio para o sistema continuar funcional.
-    Storage.gravar(CHAVE_EVENTOS, Storage.ler(CHAVE_EVENTOS, []));
-    Storage.gravar(CHAVE_ITENS, Storage.ler(CHAVE_ITENS, []));
-    Storage.gravar(CHAVE_PARTICIPANTES, Storage.ler(CHAVE_PARTICIPANTES, []));
-    console.warn('[database] Seed JSON indisponível, iniciando com dados locais.', erro);
+    console.warn('[database] JSON indisponível agora — usando dados já salvos no aparelho.', erro);
   }
 
-  Storage.gravar(CHAVE_SEED, true);
+  // Garante que participantes.json ao menos inicializa vazio na primeira vez.
+  if (Storage.ler(CHAVE_PARTICIPANTES) === null) {
+    let participantesJSON = [];
+    try {
+      participantesJSON = await fetch('data/participants.json').then((r) => r.json());
+    } catch (erro) {
+      /* Segue com array vazio se não conseguir buscar. */
+    }
+    Storage.gravar(CHAVE_PARTICIPANTES, participantesJSON);
+  }
+
+  if (eventosJSON) {
+    const eventosLocais = Storage.ler(CHAVE_EVENTOS, []);
+    const porId = new Map(eventosLocais.map((e) => [e.id, e]));
+    eventosJSON.forEach((eventoNovo) => porId.set(eventoNovo.id, eventoNovo));
+    Storage.gravar(CHAVE_EVENTOS, Array.from(porId.values()));
+  } else if (Storage.ler(CHAVE_EVENTOS) === null) {
+    Storage.gravar(CHAVE_EVENTOS, []);
+  }
+
+  if (itensJSON) {
+    const itensLocais = Storage.ler(CHAVE_ITENS, []);
+    const escolhidosPorId = new Map(itensLocais.map((i) => [i.id, i.escolhido || 0]));
+
+    const itensAtualizados = itensJSON.map((itemNovo) => ({
+      ...itemNovo,
+      escolhido: escolhidosPorId.has(itemNovo.id) ? escolhidosPorId.get(itemNovo.id) : (itemNovo.escolhido || 0),
+    }));
+
+    // Preserva itens criados manualmente pelo admin que não existem no JSON.
+    const idsNoJSON = new Set(itensJSON.map((i) => i.id));
+    itensLocais.forEach((itemLocal) => {
+      if (!idsNoJSON.has(itemLocal.id)) itensAtualizados.push(itemLocal);
+    });
+
+    Storage.gravar(CHAVE_ITENS, itensAtualizados);
+  } else if (Storage.ler(CHAVE_ITENS) === null) {
+    Storage.gravar(CHAVE_ITENS, []);
+  }
 }
 
 export const DB = {
   async iniciar() {
-    await garantirSeed();
+    await sincronizarComJSON();
   },
 
   /* ==================== EVENTOS ==================== */
