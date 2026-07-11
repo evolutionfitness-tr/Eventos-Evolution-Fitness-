@@ -49,7 +49,7 @@ async function carregarEvento() {
   estado.evento = await DB.obterEventoAtivo();
   if (!estado.evento) {
     els.heroTitulo.textContent = 'Nenhum evento ativo no momento';
-    els.heroDescricao.textContent = 'Volte em breve para conferir os próximos eventos da Evolution Fitness Studio.';
+    els.heroDescricao.textContent = 'Volte em breve para conferir os próximos eventos da Evolution Fitness Academia.';
     els.secaoConfirmacao.classList.add('u-hidden');
     return;
   }
