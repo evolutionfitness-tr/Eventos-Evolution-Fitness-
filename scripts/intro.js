@@ -1,8 +1,12 @@
+
+
 /**
  * intro.js
  * Controla a tela de abertura (splash) da página pública: gera as fagulhas
  * e luzinhas animadas e trata a transição de "entrar" para o conteúdo.
  */
+
+import { TemaJunino } from './tema-junino.js';
 
 const QTD_PARTICULAS = 16;
 const QTD_LUZES = 10;
@@ -48,9 +52,19 @@ function iniciarIntro() {
   const btnEntrar = document.getElementById('btnEntrarIntro');
   if (btnEntrar) {
     btnEntrar.addEventListener('click', () => {
+      TemaJunino.tocar(); // Só toca aqui: precisa de um toque do usuário para o navegador permitir som.
       introEl.classList.add('is-saindo');
       document.body.classList.remove('u-sem-scroll');
       setTimeout(() => introEl.remove(), 750);
+    });
+  }
+
+  const btnSom = document.getElementById('btnSomIntro');
+  if (btnSom) {
+    btnSom.addEventListener('click', () => {
+      const mudo = TemaJunino.alternarMudo();
+      btnSom.classList.toggle('is-mudo', mudo);
+      btnSom.setAttribute('aria-pressed', String(!mudo));
     });
   }
 }
@@ -68,4 +82,3 @@ window.addEventListener('pageshow', (evento) => {
     window.location.reload();
   }
 });
-
