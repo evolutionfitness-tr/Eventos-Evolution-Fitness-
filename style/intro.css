@@ -115,6 +115,26 @@
   color: var(--color-white);
 }
 
+.intro__som {
+  position: absolute;
+  top: var(--space-5);
+  right: var(--space-4);
+  z-index: 3;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  background: rgba(13, 13, 13, 0.55);
+  border: 1px solid rgba(201, 162, 39, 0.4);
+  color: var(--color-gold-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-standard);
+}
+.intro__som:hover { background: rgba(13, 13, 13, 0.8); }
+.intro__som.is-mudo { color: rgba(255, 255, 255, 0.35); }
+
 .intro__marca {
   display: inline-flex;
   align-items: center;
