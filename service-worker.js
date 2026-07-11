@@ -3,7 +3,7 @@
  * Cache básico "app shell" para permitir uso offline do Evolution Eventos.
  */
 
-const CACHE_NOME = 'evolution-eventos-v4';
+const CACHE_NOME = 'evolution-eventos-v5';
 
 const ARQUIVOS_APP_SHELL = [
   './index.html',
