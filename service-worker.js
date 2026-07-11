@@ -3,7 +3,7 @@
  * Cache básico "app shell" para permitir uso offline do Evolution Eventos.
  */
 
-const CACHE_NOME = 'evolution-eventos-v3';
+const CACHE_NOME = 'evolution-eventos-v4';
 
 const ARQUIVOS_APP_SHELL = [
   './index.html',
@@ -16,6 +16,7 @@ const ARQUIVOS_APP_SHELL = [
   './style/intro.css',
   './scripts/app.js',
   './scripts/intro.js',
+  './scripts/tema-junino.js',
   './scripts/integracoes.js',
   './scripts/admin.js',
   './scripts/database.js',
@@ -34,13 +35,14 @@ const ARQUIVOS_APP_SHELL = [
   './assets/icons/icon-maskable.svg',
   './assets/images/evento-capa.svg',
   './assets/images/arraia-personagem.jpg',
+  './assets/audio/tema-junino.mp3',
 ];
 
 self.addEventListener('install', (evento) => {
   evento.waitUntil(
-    caches.open(CACHE_NOME).then((cache) => cache.addAll(ARQUIVOS_APP_SHELL)).catch(() => {
-      /* Se algum arquivo falhar (ex.: imagem ainda não enviada), instala o resto mesmo assim. */
-    })
+    caches.open(CACHE_NOME).then((cache) =>
+      Promise.allSettled(ARQUIVOS_APP_SHELL.map((arquivo) => cache.add(arquivo)))
+    )
   );
   self.skipWaiting();
 });
