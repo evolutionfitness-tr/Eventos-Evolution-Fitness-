@@ -1,7 +1,7 @@
 {
   "name": "Evolution Eventos",
   "short_name": "Eventos",
-  "description": "Confirme presença e escolha itens para os eventos da Evolution Fitness Studio.",
+  "description": "Confirme presença e escolha itens para os eventos da Evolution Fitness Academia.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
