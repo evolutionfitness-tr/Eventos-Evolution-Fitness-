@@ -210,8 +210,29 @@ async function iniciar() {
   ligarEventosFormulario();
 
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('service-worker.js').catch(() => {
-      /* Falha silenciosa: app continua funcional sem SW. */
+    // updateViaCache: 'none' força o navegador a NUNCA usar cache HTTP ao
+    // verificar o próprio arquivo service-worker.js — sem isso, o navegador
+    // pode continuar comparando uma cópia antiga em cache e nunca perceber
+    // que existe uma versão nova publicada.
+    navigator.serviceWorker
+      .register('service-worker.js', { updateViaCache: 'none' })
+      .then((registro) => {
+        // Força uma checagem imediata por atualização, em vez de esperar
+        // o navegador decidir sozinho quando checar.
+        registro.update();
+      })
+      .catch(() => {
+        /* Falha silenciosa: app continua funcional sem SW. */
+      });
+
+    // Assim que uma nova versão assumir o controle, recarrega a página
+    // automaticamente para garantir que o conteúdo novo apareça na hora,
+    // sem a pessoa precisar limpar dados manualmente.
+    let jaRecarregou = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (jaRecarregou) return;
+      jaRecarregou = true;
+      window.location.reload();
     });
   }
 }
