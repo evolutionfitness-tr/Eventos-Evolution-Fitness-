@@ -3,7 +3,7 @@
  * Cache básico "app shell" para permitir uso offline do Evolution Eventos.
  */
 
-const CACHE_NOME = 'evolution-eventos-v5';
+const CACHE_NOME = 'evolution-eventos-v6';
 
 const ARQUIVOS_APP_SHELL = [
   './index.html',
@@ -59,17 +59,19 @@ self.addEventListener('activate', (evento) => {
 self.addEventListener('fetch', (evento) => {
   if (evento.request.method !== 'GET') return;
 
+  // Estratégia "rede primeiro": sempre tenta buscar a versão mais nova na
+  // internet. Só usa a cópia salva localmente se a pessoa estiver offline.
+  // Isso garante que qualquer atualização do site chega automaticamente
+  // para todo mundo, sem precisar limpar dados do navegador.
   evento.respondWith(
-    caches.match(evento.request).then((respostaCache) => {
-      if (respostaCache) return respostaCache;
-
-      return fetch(evento.request)
-        .then((respostaRede) => {
-          const clone = respostaRede.clone();
-          caches.open(CACHE_NOME).then((cache) => cache.put(evento.request, clone));
-          return respostaRede;
-        })
-        .catch(() => caches.match('./index.html'));
-    })
+    fetch(evento.request)
+      .then((respostaRede) => {
+        const clone = respostaRede.clone();
+        caches.open(CACHE_NOME).then((cache) => cache.put(evento.request, clone));
+        return respostaRede;
+      })
+      .catch(() =>
+        caches.match(evento.request).then((respostaCache) => respostaCache || caches.match('./index.html'))
+      )
   );
 });
