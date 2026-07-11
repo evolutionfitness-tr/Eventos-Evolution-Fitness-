@@ -1,7 +1,7 @@
 # Evolution Eventos
 
-Sistema de gestão de eventos da **Evolution Fitness Studio** (Três Rios, RJ).
-Primeiro módulo do futuro aplicativo **Evolution Studio**. Construído em
+Sistema de gestão de eventos da **Evolution Fitness Academia** (Três Rios, RJ).
+Primeiro módulo do futuro aplicativo **Evolution Academia**. Construído em
 HTML5, CSS3 e JavaScript ES6+ puro (sem frameworks), como PWA instalável e
 funcional offline.
 
